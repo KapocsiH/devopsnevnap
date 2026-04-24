@@ -1,0 +1,106 @@
+# kubectl create secret docker-registry ghcr-auth-secret --docker-server=ghcr.io --docker-username=hunbenjamin --docker-password=$GHCR_TOKEN
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopsnevnap-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: devopsnevnap-backend
+  template:
+    metadata:
+      labels:
+        pod: devopsnevnap-backend
+    spec:
+      containers:
+        - name: devopsnevnap-backend-container
+          image: ghcr.io/kapocsih/devopsnevnap-backend:1777014087
+          ports:
+            - containerPort: 3000
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devopsnevnap-backend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    pod: devopsnevnap-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devopsnevnap-backend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: devopsnevnap-backend-kapocsihunor.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: devopsnevnap-backend-clusterip
+                port:
+                  number: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopsnevnap-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: devopsnevnap-frontend
+  template:
+    metadata:
+      labels:
+        pod: devopsnevnap-frontend
+    spec:
+      containers:
+        - name: devopsnevnap-frontend-container
+          image: ghcr.io/kapocsih/devopsnevnap-frontend:1777014087
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devopsnevnap-frontend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    pod: devopsnevnap-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devopsnevnap-frontend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: devopsnevnap-frontend-kapocsihunor.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: devopsnevnap-frontend-clusterip
+                port:
+                  number: 80
