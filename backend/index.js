@@ -2,7 +2,7 @@ const http = require('http');
 const url = require('url');
 
 const namedays = {
-  "01-01": ["Fruzsina"],
+  "01-01": ["Fruzsina, Bálint"],
   "01-02": ["Ábel"],
   "01-03": ["Genovéva", "Benjámin"],
   "01-04": ["Titusz", "Leona"],
