@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: devopsnevnap-backend-container
-          image: ghcr.io/kapocsih/devopsnevnap-backend:1777017723
+          image: ghcr.io/kapocsih/devopsnevnap-backend:1777271052
           ports:
             - containerPort: 3000
       imagePullSecrets:
@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
         - name: devopsnevnap-frontend-container
-          image: ghcr.io/kapocsih/devopsnevnap-frontend:1777017723
+          image: ghcr.io/kapocsih/devopsnevnap-frontend:1777271052
           ports:
             - containerPort: 80
       imagePullSecrets:
